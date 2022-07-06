@@ -9,6 +9,7 @@ namespace Cursos.Api.Models
         public DateTime DataInicio { get; set; }
         public DateTime DataFinal { get; set; }
         public int QuantidadeAlunos { get; set; }
+        public int CategoriaId { get; set; }
         public Categoria Categoria { get; set; }
     }
 }

@@ -29,7 +29,7 @@ namespace Cursos.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(
-                data => data.UseSqlServer(Configuration.GetConnectionString("Default") )
+                data => data.UseSqlServer(Configuration.GetConnectionString("Local") )
             );
             services.AddControllers();
             services.AddSwaggerGen(c =>

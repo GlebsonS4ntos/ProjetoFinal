@@ -30,7 +30,7 @@ namespace Cursos.Api.Migrations
                     DataInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataFinal = table.Column<DateTime>(type: "datetime2", nullable: false),
                     QuantidadeAlunos = table.Column<int>(type: "int", nullable: false),
-                    CategoriaId = table.Column<int>(type: "int", nullable: true)
+                    CategoriaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

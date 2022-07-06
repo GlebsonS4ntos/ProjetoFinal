@@ -42,7 +42,7 @@ namespace Cursos.Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CategoriaId")
+                    b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataFinal")
@@ -68,7 +68,9 @@ namespace Cursos.Api.Migrations
                 {
                     b.HasOne("Cursos.Api.Models.Categoria", "Categoria")
                         .WithMany("Cursos")
-                        .HasForeignKey("CategoriaId");
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Categoria");
                 });

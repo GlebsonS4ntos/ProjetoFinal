@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cursos.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220706135858_EntidadesCursoeCategoria")]
+    [Migration("20220706141259_EntidadesCursoeCategoria")]
     partial class EntidadesCursoeCategoria
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,7 +44,7 @@ namespace Cursos.Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CategoriaId")
+                    b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataFinal")
@@ -70,7 +70,9 @@ namespace Cursos.Api.Migrations
                 {
                     b.HasOne("Cursos.Api.Models.Categoria", "Categoria")
                         .WithMany("Cursos")
-                        .HasForeignKey("CategoriaId");
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Categoria");
                 });
