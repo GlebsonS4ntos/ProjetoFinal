@@ -8,7 +8,7 @@ namespace Cursos.Api.Models
         public int CursoId { get; set; }
         public Curso Curso { get; set; }
         public DateTime DataInclusao { get; set; }
-        public DateTime DataAtualizacao { get; set; }
+        public DateTime? DataAtualizacao { get; set; }
 
     }
 }

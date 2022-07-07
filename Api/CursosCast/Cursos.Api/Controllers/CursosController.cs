@@ -66,10 +66,18 @@ namespace Cursos.Api.Controllers
             {
                 _context.Curso.Add(curso);
                 await _context.SaveChangesAsync();
+                CreatedAtAction("GetCurso", new { id = curso.CursoId }, curso);
+                Log log = new()
+                {
+                    CursoId = curso.CursoId,
+                    DataInclusao = DateTime.Now
+                };
+                _context.Log.Add(log);
+                await _context.SaveChangesAsync();
                 return Ok();
             }
 
-            return CreatedAtAction("GetCurso", new { id = curso.CursoId }, curso);
+            return BadRequest();
         }
 
         // DELETE: api/Cursos/5
