@@ -11,5 +11,6 @@ namespace Cursos.Api.Data
 
         public DbSet<Curso> Curso { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<Log> Log { get; set; }
     }
 }

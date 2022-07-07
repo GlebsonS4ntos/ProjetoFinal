@@ -11,5 +11,6 @@ namespace Cursos.Api.Models
         public int QuantidadeAlunos { get; set; }
         public int CategoriaId { get; set; }
         public Categoria Categoria { get; set; }
+        public bool IsActive { get; set; }
     }
 }
