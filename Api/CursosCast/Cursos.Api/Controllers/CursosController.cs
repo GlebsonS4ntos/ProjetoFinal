@@ -44,33 +44,17 @@ namespace Cursos.Api.Controllers
 
         // PUT: api/Cursos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCurso(int id, Curso curso)
+        [HttpPut]
+        public async Task<IActionResult> PutCurso(Curso curso)
         {
-            if (id != curso.CursoId)
+            if (ModelState.IsValid)
             {
-                return BadRequest();
-            }
-
-            _context.Entry(curso).State = EntityState.Modified;
-
-            try
-            {
+                _context.Curso.Update(curso);
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CursoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return Ok();
             }
 
-            return NoContent();
+            return BadRequest();
         }
 
         // POST: api/Cursos
@@ -78,26 +62,33 @@ namespace Cursos.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Curso>> PostCurso(Curso curso)
         {
-            _context.Curso.Add(curso);
-            await _context.SaveChangesAsync();
+            if (ModelState.IsValid)
+            {
+                _context.Curso.Add(curso);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
 
             return CreatedAtAction("GetCurso", new { id = curso.CursoId }, curso);
         }
 
         // DELETE: api/Cursos/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCurso(int id)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DeleteLogicoCurso(int id)
         {
             var curso = await _context.Curso.FindAsync(id);
             if (curso == null)
             {
                 return NotFound();
             }
-
-            _context.Curso.Remove(curso);
+            if (DateTime.Now > curso.DataInicio && DateTime.Now < curso.DataFinal)
+            {
+                return BadRequest();
+            }
+            curso.IsActive = false;
+            _context.Curso.Update(curso);
             await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok();
         }
 
         private bool CursoExists(int id)
