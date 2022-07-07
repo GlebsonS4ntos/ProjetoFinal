@@ -132,3 +132,6 @@ E:\ProjetoFinal\Api\CursosCast\Cursos.Api\obj\Debug\net5.0\refint\Cursos.Api.dll
 E:\ProjetoFinal\Api\CursosCast\Cursos.Api\obj\Debug\net5.0\Cursos.Api.pdb
 E:\ProjetoFinal\Api\CursosCast\Cursos.Api\obj\Debug\net5.0\Cursos.Api.genruntimeconfig.cache
 E:\ProjetoFinal\Api\CursosCast\Cursos.Api\obj\Debug\net5.0\ref\Cursos.Api.dll
+E:\ProjetoFinal\Api\CursosCast\Cursos.Api\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+E:\ProjetoFinal\Api\CursosCast\Cursos.Api\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+E:\ProjetoFinal\Api\CursosCast\Cursos.Api\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
