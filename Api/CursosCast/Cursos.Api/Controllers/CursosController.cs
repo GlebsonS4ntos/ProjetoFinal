@@ -25,7 +25,7 @@ namespace Cursos.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Curso>>> GetCurso()
         {
-            return await _context.Curso.Include(x => x.Categoria).ToListAsync();
+            return await _context.Curso.Include(x => x.Categoria).Where(x => x.IsActive == true).ToListAsync();
         }
 
         // GET: api/Cursos/5
