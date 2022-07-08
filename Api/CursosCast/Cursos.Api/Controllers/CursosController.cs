@@ -49,6 +49,11 @@ namespace Cursos.Api.Controllers
         {
             if (ModelState.IsValid)
             {
+                var resultado = _context.Curso.Where(x => x.Descricao.ToLower() == curso.Descricao.ToLower()).FirstOrDefault();
+                if (resultado != null)
+                {
+                    return BadRequest("Descrição é a mesma usada em Outro Curso !");
+                }
                 _context.Curso.Update(curso);
                 await _context.SaveChangesAsync();
                 var log =_context.Log.FirstOrDefault(x => x.CursoId == curso.CursoId);
@@ -68,6 +73,11 @@ namespace Cursos.Api.Controllers
         {
             if (ModelState.IsValid)
             {
+                var resultado = _context.Curso.Where(x => x.Descricao.ToLower() == curso.Descricao.ToLower()).FirstOrDefault();
+                if (resultado != null)
+                {
+                    return BadRequest("Descrição é a mesma usada em Outro Curso !");
+                }
                 _context.Curso.Add(curso);
                 await _context.SaveChangesAsync();
                 CreatedAtAction("GetCurso", new { id = curso.CursoId }, curso);
@@ -78,7 +88,7 @@ namespace Cursos.Api.Controllers
                 };
                 _context.Log.Add(log);
                 await _context.SaveChangesAsync();
-                return Ok();
+                return CreatedAtAction("GetCurso", new { id = curso.CursoId }, curso);
             }
 
             return BadRequest();
@@ -93,7 +103,7 @@ namespace Cursos.Api.Controllers
             {
                 return NotFound();
             }
-            if (DateTime.Now > curso.DataInicio && DateTime.Now < curso.DataFinal)
+            if (DateTime.Now > curso.DataInicio && DateTime.Now < curso.DataFinal || DateTime.Now > curso.DataFinal)
             {
                 return BadRequest();
             }
