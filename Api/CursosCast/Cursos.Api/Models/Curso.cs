@@ -11,6 +11,7 @@ namespace Cursos.Api.Models
         [Required(ErrorMessage = "Descrição é Obrigatória !")]
         public string Descricao { get; set; }
         [Required(ErrorMessage = "Data Inicial é Obrigatória !")]
+        [DataInicioMenorQueAtual]
         public DateTime DataInicio { get; set; }
         [Required(ErrorMessage = "Data Final é Obrigatória !")]
         [DataFinalMaiorQueInicial("DataInicio")]
@@ -48,4 +49,20 @@ namespace Cursos.Api.Models
         }
     }
 
+    public class DataInicioMenorQueAtual : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (validationContext.ObjectInstance != null)
+            {
+               DateTime dataInicial = (DateTime)value; 
+               if (dataInicial >= DateTime.Now)
+               {
+                    return ValidationResult.Success;
+               }
+            }
+
+            return new ValidationResult(errorMessage: "Data Inicial menor que a data Atual !");
+        }
+    }
 }
