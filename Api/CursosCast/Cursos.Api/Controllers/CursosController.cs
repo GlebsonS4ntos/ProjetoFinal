@@ -51,6 +51,10 @@ namespace Cursos.Api.Controllers
             {
                 _context.Curso.Update(curso);
                 await _context.SaveChangesAsync();
+                var log =_context.Log.FirstOrDefault(x => x.CursoId == curso.CursoId);
+                log.DataAtualizacao = DateTime.Now;
+                _context.Log.Update(log);
+                await _context.SaveChangesAsync();
                 return Ok();
             }
 
