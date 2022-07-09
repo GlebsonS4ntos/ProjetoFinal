@@ -52,7 +52,13 @@ namespace Cursos.Api.Controllers
                 var resultado = _context.Curso.Where(x => x.Descricao.ToLower() == curso.Descricao.ToLower()).FirstOrDefault();
                 if (resultado != null)
                 {
-                    return BadRequest("Descrição é a mesma usada em Outro Curso !");
+                    return BadRequest(error: "Descrição é a mesma usada em Outro Curso !");
+                }
+                var resultadoDataEntre = _context.Curso.Where(x => x.DataInicio >= curso.DataInicio && x.DataFinal <= curso.DataFinal).FirstOrDefault();
+                var resultadoDataAnteseApos = _context.Curso.Where(x => x.DataInicio <= curso.DataInicio && x.DataFinal >= curso.DataFinal).FirstOrDefault();
+                if (resultadoDataEntre != null || resultadoDataAnteseApos != null )
+                {
+                    return BadRequest(error: "Ja existe um curso no periodo informado ! ");
                 }
                 _context.Curso.Update(curso);
                 await _context.SaveChangesAsync();
@@ -77,6 +83,12 @@ namespace Cursos.Api.Controllers
                 if (resultado != null)
                 {
                     return BadRequest("Descrição é a mesma usada em Outro Curso !");
+                }
+                var resultadoDataEntre = _context.Curso.Where(x => x.DataInicio >= curso.DataInicio && x.DataFinal <= curso.DataFinal).FirstOrDefault();
+                var resultadoDataAnteseApos = _context.Curso.Where(x => x.DataInicio <= curso.DataInicio && x.DataFinal >= curso.DataFinal).FirstOrDefault();
+                if (resultadoDataEntre != null || resultadoDataAnteseApos != null)
+                {
+                    return BadRequest(error: "Ja existe um curso no periodo informado ! ");
                 }
                 _context.Curso.Add(curso);
                 await _context.SaveChangesAsync();
@@ -105,9 +117,13 @@ namespace Cursos.Api.Controllers
             }
             if (DateTime.Now > curso.DataInicio && DateTime.Now < curso.DataFinal || DateTime.Now > curso.DataFinal)
             {
-                return BadRequest();
+                return BadRequest("Não é possivel excluir um Curso que está em Andamento !");
             }
-            curso.IsActive = false;
+            if (DateTime.Now > curso.DataFinal)
+            {
+                return BadRequest("Não é possivel deletar um curso que já foi Concluido !");
+            }
+                curso.IsActive = false;
             _context.Curso.Update(curso);
             await _context.SaveChangesAsync();
             return Ok();
