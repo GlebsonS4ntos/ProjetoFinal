@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=Ubuntu:ital,wght@0,300;1,300&display=swap');
+.nav-bar{
+  background-image: linear-gradient(to right, rgb(21, 36, 57), rgb(39, 107, 147));
+  font-family: 'Ubuntu', cursive;
+}
+.Logo{
+  max-height: 40px;
+  max-width: 60px;
+}
+@media screen and (max-width: 500px) {
+  .offcanvas {
+    max-width: 210px;
+  }
+}
+.selected {
+  color: blue;
+}
