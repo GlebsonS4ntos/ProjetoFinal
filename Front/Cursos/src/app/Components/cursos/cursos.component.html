@@ -1,10 +1,10 @@
 <br><br><br><br>
 <div class="container" style="display: flex; justify-content: end;">
-  <a type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal"> Novo Curso </a>
+  <a type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="abrirModalAdicionar()"> Novo Curso </a>
 </div>
 <br><br>
 
-<div class="container">
+<div class="container" style="overflow: auto;">
   <table class="table table-striped table-hover">
     <thead>
       <tr>
@@ -19,9 +19,13 @@
       <tr *ngFor="let c of cursos, let i = index">
         <th scope="row">{{ i+1 }}</th>
         <td>{{ c.descricao }}</td>
-        <td>{{ c.dataInicio }}</td>
+        <td>{{ c.dataInicio | date:'dd/MM/yyyy' }}</td>
         <td>{{ c.dataFinal }}</td>
         <td>{{ c.categoria.categoriaName }}</td>
+        <td>
+          <a type="button" class="btn btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i></a>
+          <a type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-trash3"></i></a>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -32,15 +36,50 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">{{ tituloModal }}:</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ...
+        <form [formGroup]="form" class="row g-3 was-validated">
+          <div class="col-md-12">
+            <label for="validationServer01" class="form-label">Descrição:</label>
+            <input type="text" class="form-control is-valid" id="validationServer01" formControlName="descricao" required>
+            <div class="invalid-feedback">
+              Campo Obrigatorio*
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="validationServer02" class="form-label">Data Inicial:</label>
+            <input type="date" class="form-control is-valid" id="validationServer02" formControlName="dataInicio" required>
+            <div class="invalid-feedback">
+              Campo Obrigatorio*
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="validationServer02" class="form-label">Data Final:</label>
+            <input type="date" class="form-control is-valid" id="validationServer02" formControlName="dataFinal" required>
+            <div class="invalid-feedback">
+              Campo Obrigatorio*
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label for="validationServer03" class="form-label">Alunos:</label>
+            <input type="number" class="form-control" id="validationServer03" formControlName="quantidadeAlunos">
+          </div>
+          <div class="col-md-6">
+            <label for="validationServer04" class="form-label">Categoria:</label>
+            <select class="form-select" required aria-label="select example"  id="validationServer04" formControlName="categoriaId" required>
+              <option *ngFor="let categoria of categorias" [value]="categoria.categoriaId"> {{ categoria.categoriaName }}</option>
+            </select>
+            <div class="invalid-feedback" id="validationServer04Feedback">
+              Example invalid select feedback
+            </div>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary" [disabled]="!form.valid" (click)="enviarFormulario()" data-bs-dismiss="modal">Salvar</button>
       </div>
     </div>
   </div>

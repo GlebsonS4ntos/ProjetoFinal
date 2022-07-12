@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 const httpOptions = {
-  Headers: new HttpHeaders({
+  headers: new HttpHeaders({
     'content-Type' : 'application/json'
   })
 }
@@ -18,5 +18,14 @@ export class CursosService {
 
   PegarTodos(): Observable<Curso[]>{
     return this.http.get<Curso[]>(this.url);
+  }
+
+  Salvar(curso : Curso): Observable<any>{
+    return this.http.post<Curso>(this.url, curso, httpOptions);
+  }
+
+  Delete(id: number): Observable<any>{
+    const a = `${this.url}/${id}`
+    return this.http.put<number>(a,httpOptions);
   }
 }
