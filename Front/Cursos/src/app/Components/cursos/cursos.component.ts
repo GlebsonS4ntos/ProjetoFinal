@@ -16,6 +16,11 @@ export class CursosComponent implements OnInit {
   tituloModal!: string;
   form: any ;
   categorias!: Categoria[];
+  idDeletar!:number;
+
+  alterarIdDeletar(id:number){
+    this.idDeletar = id;
+  }
 
   constructor(private cursosService:CursosService, private toastr:ToastrService, private categoriaService: CategoriaService) { }
 
@@ -66,5 +71,15 @@ export class CursosComponent implements OnInit {
       this.toastr.error(error);
     }
     );
+  }
+
+  ExcluirCurso(id:number):void{
+    console.log(id);
+    this.cursosService.Delete(id).subscribe( resultado => {
+      this.toastr.error("Registro Deletado");
+      this.cursosService.PegarTodos().subscribe(resultado =>
+          this.cursos = resultado
+        );
+    })
   }
 }
