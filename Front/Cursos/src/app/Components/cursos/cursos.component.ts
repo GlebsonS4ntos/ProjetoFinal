@@ -21,6 +21,8 @@ export class CursosComponent implements OnInit {
   idDeletar!:number;
   dataAtual = new Date();
   private _buscar!: string;
+  private _dataInicio!: Date;
+  private _dataFinal!: Date;
 
   get buscar():string{
     return this._buscar;
@@ -33,10 +35,36 @@ export class CursosComponent implements OnInit {
       : this.cursos;
   }
 
+  get dataInicio():Date{
+    return this._dataInicio;
+  }
+
+  set dataInicio(s: Date){
+    this._dataInicio = s;
+  }
+
+  get dataFinal():Date{
+    return this._dataFinal;
+  }
+
+  set dataFinal(s: Date){
+    this._dataFinal = s;
+  }
+
   filtrarCuros(s:string):any{
     return this.cursos.filter(
       (curso: { descricao: string }) =>
         curso.descricao.toLocaleLowerCase().indexOf(s.toLocaleLowerCase()) !== -1
+    );
+  }
+
+  buscarData():void{
+    this.cursosFiltrados = this.cursos.filter(
+      (result) =>
+      (this.dataInicio <= result.dataInicio && this.dataFinal >= result.dataFinal) ||
+      ((this.dataInicio >= result.dataInicio && this.dataInicio <= result.dataFinal) && this.dataFinal <= result.dataFinal) ||
+      ((this.dataInicio >= result.dataInicio && this.dataInicio <= result.dataFinal) && this.dataFinal > result.dataFinal) ||
+      (this.dataInicio <= result.dataInicio && (this.dataFinal >= result.dataInicio && this.dataFinal <= result.dataFinal))
     );
   }
 

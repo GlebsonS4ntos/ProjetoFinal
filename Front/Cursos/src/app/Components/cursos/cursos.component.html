@@ -5,14 +5,14 @@
 <br><br>
 
 <!-- Pesquisa -->
-<div class="container mb-2" >
+<div class="container mb-2" style="display: flex;">
   <div class="cabecaTabela input-group">
     <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
     <input class="form-control" type="search" placeholder="Digite a Descrição" aria-label="Search"  [(ngModel)]="buscar" style="max-width: 500px;min-width: 250px; margin-right: 100px;">
-    <p style="padding-top: 10px; color: red; margin-right: 30px">Digite o Periodo: </p>
-    <input type="date" class="input-group-text me-2">
-    <input type="date" class="input-group-text">
   </div>
+  <input type="date" class="input-group-text me-2" [(ngModel)]="dataInicio" style="width: 200px">
+  <input type="date" class="input-group-text me-2" [(ngModel)]="dataFinal"  style="width: 200px">
+  <button class="input-group-text" id="basic-addon1" (click)="buscarData()"><i class="bi bi-search"></i></button>
 </div>
 
 <!-- Tabela -->
