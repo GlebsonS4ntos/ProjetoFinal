@@ -21,8 +21,8 @@ export class CursosComponent implements OnInit {
   idDeletar!:number;
   dataAtual = new Date();
   private _buscar!: string;
-  private _dataInicio!: Date;
-  private _dataFinal!: Date;
+  private _dataInicio!: any;
+  private _dataFinal!: any;
 
   get buscar():string{
     return this._buscar;
@@ -59,13 +59,19 @@ export class CursosComponent implements OnInit {
   }
 
   buscarData():void{
-    this.cursosFiltrados = this.cursos.filter(
-      (result) =>
-      (this.dataInicio <= result.dataInicio && this.dataFinal >= result.dataFinal) ||
-      ((this.dataInicio >= result.dataInicio && this.dataInicio <= result.dataFinal) && this.dataFinal <= result.dataFinal) ||
-      ((this.dataInicio >= result.dataInicio && this.dataInicio <= result.dataFinal) && this.dataFinal > result.dataFinal) ||
-      (this.dataInicio <= result.dataInicio && (this.dataFinal >= result.dataInicio && this.dataFinal <= result.dataFinal))
-    );
+    if(this.dataFinal != null && this.dataFinal != null){
+      this._buscar = "";
+      this.cursosFiltrados = this.cursos.filter(
+        (result) =>
+        (this.dataInicio <= result.dataInicio && this.dataFinal >= result.dataFinal) ||
+        ((this.dataInicio >= result.dataInicio && this.dataInicio <= result.dataFinal) && this.dataFinal <= result.dataFinal) ||
+        ((this.dataInicio >= result.dataInicio && this.dataInicio <= result.dataFinal) && this.dataFinal > result.dataFinal) ||
+        (this.dataInicio <= result.dataInicio && (this.dataFinal >= result.dataInicio && this.dataFinal <= result.dataFinal))
+      );
+    }
+    else{
+      this.toastr.error("Ops, Parece que você n digitou um dos campos !")
+    }
   }
 
   alterarIdDeletar(id:number){
@@ -101,7 +107,7 @@ export class CursosComponent implements OnInit {
     this.form = new FormGroup({
       cursoId: new FormControl(0),
       descricao: new FormControl(null, [Validators.required]),
-      dataInicio: new FormControl(null, [Validators.required]),
+      dataInicio: new FormControl(null, [Validators.required, validacoes.dataMenorQueAtual()]),
       dataFinal: new FormControl(null, [Validators.required]),
       quantidadeAlunos: new FormControl(null),
       categoriaId: new FormControl(0, [Validators.required]),
@@ -161,14 +167,25 @@ export class CursosComponent implements OnInit {
   ExcluirCurso(id:number):void{
     this.cursosService.Delete(id).subscribe( resultado => {
       this.toastr.error("Registro Deletado");
-      this.cursosService.PegarTodos().subscribe(resultado =>
-          this.cursosFiltrados = resultado
+      this.cursosService.PegarTodos().subscribe(resultado => {
+        this.cursosFiltrados = resultado
+      },
+      (error) => {
+        this.toastr.error("Não é possivel Deletar um curso com ja completado");
+      }
         );
     })
   }
 
   formatarData(n: any): Date{
     return n.split('T')[0];
+  }
+
+  reload(): void{
+    this.cursosFiltrados = this.cursos;
+    this._buscar = "";
+    this._dataFinal = null;
+    this._dataInicio = null;
   }
 
 }

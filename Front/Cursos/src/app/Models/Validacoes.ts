@@ -6,14 +6,14 @@ export class validacoes{
   static dataMenorQueAtual() {
     return (control: AbstractControl):  Validators => {
       const data = control.value;
-      const dataAtual: any = new Date();
-      const dataAtualFormatada = dataAtual.split('T')[0];
-      console.log(dataAtualFormatada);
-      console.log(data);
-      if(data < dataAtualFormatada){
-        return {dataInicioInvalida : true};
+      if(data != null) {
+        const dataAtual = new Date();
+        const dataAtualFormatada = dataAtual.toISOString().split('T')[0];
+        if(parseInt(data) < parseInt(dataAtualFormatada)){
+          return {dataInicioInvalida : true};
+        }
       }
-      return true;
+      return false;
     };
   }
 }

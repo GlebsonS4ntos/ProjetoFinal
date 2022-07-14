@@ -12,7 +12,8 @@
   </div>
   <input type="date" class="input-group-text me-2" [(ngModel)]="dataInicio" style="width: 200px">
   <input type="date" class="input-group-text me-2" [(ngModel)]="dataFinal"  style="width: 200px">
-  <button class="input-group-text" id="basic-addon1" (click)="buscarData()"><i class="bi bi-search"></i></button>
+  <button class="input-group-text me-2" id="basic-addon1" (click)="buscarData()"><i class="bi bi-search"></i></button>
+  <button class="input-group-text" id="basic-addon1" (click)="reload()"><i class="bi bi-arrow-clockwise"></i></button>
 </div>
 
 <!-- Tabela -->
@@ -73,7 +74,7 @@
             <label for="validationServer02" class="form-label">Data Inicial:</label>
             <input type="date" class="form-control is-valid" id="validationServer02" formControlName="dataInicio"  min="{{ dataAtual | date: 'yyyy-MM-dd' }}"required>
             <div class="invalid-feedback">
-              Campo Obrigatorio*
+              Campo Obrigatorio Menor que a Data Atual*
             </div>
           </div>
           <div class="col-md-6">

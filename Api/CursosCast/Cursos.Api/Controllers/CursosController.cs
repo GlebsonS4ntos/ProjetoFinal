@@ -127,7 +127,7 @@ namespace Cursos.Api.Controllers
             {
                 return NotFound();
             }
-            if (DateTime.Now > curso.DataInicio && DateTime.Now < curso.DataFinal || DateTime.Now > curso.DataFinal)
+            if (DateTime.Now > curso.DataInicio && DateTime.Now < curso.DataFinal)
             {
                 return BadRequest("Não é possivel excluir um Curso que está em Andamento !");
             }
