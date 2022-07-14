@@ -22,7 +22,7 @@ export class CursosComponent implements OnInit {
     this.idDeletar = id;
   }
 
-  constructor(private cursosService:CursosService, private toastr:ToastrService, private categoriaService: CategoriaService) { }
+  constructor(private cursosService:CursosService, private toastr: ToastrService, private categoriaService: CategoriaService) { }
 
   ngOnInit(): void {
     this.cursosService.PegarTodos().subscribe(
@@ -41,10 +41,10 @@ export class CursosComponent implements OnInit {
       categoriaId: new FormControl(0, [Validators.required]),
       isActive: new FormControl(true),
       categoria: new FormControl(null)
-    })
+    });
   }
 
-  abrirModalAdicionar(){
+  abrirModalAdicionar():void{
     this.tituloModal = 'Adicionar Curso';
     this.form = new FormGroup({
       cursoId: new FormControl(0),
@@ -58,23 +58,55 @@ export class CursosComponent implements OnInit {
     })
   }
 
+  abrirModalAtualizacao(cursoId:number): void{
+    this.tituloModal = 'Atualizar Curso';
+    this.cursosService.PegarPeloId(cursoId).subscribe(resultado => {
+      this.form = new FormGroup({
+        cursoId: new FormControl(resultado.cursoId),
+        descricao: new FormControl(resultado.descricao, [Validators.required]),
+        dataInicio: new FormControl(this.formatarData(resultado.dataInicio), [Validators.required]),
+        dataFinal: new FormControl(this.formatarData(resultado.dataFinal), [Validators.required]),
+        quantidadeAlunos: new FormControl(resultado.quantidadeAlunos),
+        categoriaId: new FormControl(resultado.categoriaId, [Validators.required]),
+        isActive: new FormControl(true),
+        categoria: new FormControl(null)
+      });
+    })
+  }
+
   enviarFormulario(){
     const curso: Curso = this.form.value;
-    console.log(curso);
-    this.cursosService.Salvar(curso).subscribe((resultado) => {
-      this.toastr.success('Inserido com Sucesso!');
-      this.cursosService.PegarTodos().subscribe((registros) => {
-      this.cursos = registros;
-      });
-    },
-    (error) => {
-      this.toastr.error(error);
+    if(curso.quantidadeAlunos < 0){
+      curso.quantidadeAlunos = 0;
     }
-    );
+    if(curso.cursoId > 0){ //atualização
+      this.cursosService.AtualizarCurso(curso).subscribe((resultado) => {
+        this.toastr.success('Atualizado com Sucesso!');
+        this.cursosService.PegarTodos().subscribe((registros) => {
+          this.cursos = registros;
+        });
+      },
+      (error) => {
+        this.toastr.error("Error ao Atualizar o Curso! Verifique o Periodo Informado ou a Descrição");
+        console.log(error);
+      }
+      );
+    }
+    else{ //inserir
+      this.cursosService.Salvar(curso).subscribe((resultado) => {
+        this.toastr.success('Inserido com Sucesso!');
+        this.cursosService.PegarTodos().subscribe((registros) => {
+        this.cursos = registros;
+        });
+      },
+      (error) => {
+        this.toastr.error("Error ao Inserir o Curso! Verifique o Periodo Informado ou a Descrição");
+      }
+      );
+    }
   }
 
   ExcluirCurso(id:number):void{
-    console.log(id);
     this.cursosService.Delete(id).subscribe( resultado => {
       this.toastr.error("Registro Deletado");
       this.cursosService.PegarTodos().subscribe(resultado =>
@@ -82,4 +114,9 @@ export class CursosComponent implements OnInit {
         );
     })
   }
+
+  formatarData(n: any): Date{
+    return n.split('T')[0];
+  }
+
 }

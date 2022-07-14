@@ -49,14 +49,20 @@ namespace Cursos.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                var resultado = _context.Curso.Where(x => x.Descricao.ToLower() == curso.Descricao.ToLower()).FirstOrDefault();
-                if (resultado != null)
+                var notActive = _context.Curso.Where(x => x.IsActive == true && x.CursoId != curso.CursoId).ToListAsync();
+                bool notA = notActive.Result.Where(x => x.Descricao.ToLower() == curso.Descricao.ToLower()).Any();
+                if (notA)
                 {
                     return BadRequest(error: "Descrição é a mesma usada em Outro Curso !");
                 }
-                var resultadoDataEntre = _context.Curso.Where(x => x.DataInicio >= curso.DataInicio && x.DataFinal <= curso.DataFinal).FirstOrDefault();
-                var resultadoDataAnteseApos = _context.Curso.Where(x => x.DataInicio <= curso.DataInicio && x.DataFinal >= curso.DataFinal).FirstOrDefault();
-                if (resultadoDataEntre != null || resultadoDataAnteseApos != null )
+                bool dataAntesApos = notActive.Result.Where(x => curso.DataInicio <= x.DataInicio && curso.DataFinal >= x.DataFinal).Any();
+                bool dataAntesEntre = notActive.Result.Where(x => curso.DataInicio <= x.DataInicio &&
+                                                    (curso.DataFinal <= x.DataFinal && curso.DataFinal >= x.DataInicio)).Any();
+                bool dataEntre = notActive.Result.Where(x => (curso.DataInicio >= x.DataInicio && curso.DataInicio <= x.DataFinal) &&
+                                                    (curso.DataFinal <= x.DataFinal && curso.DataFinal >= x.DataInicio)).Any();
+                bool dataEntreApos = notActive.Result.Where(x => (curso.DataInicio >= x.DataInicio && curso.DataInicio <= x.DataFinal) &&
+                                                    curso.DataFinal > x.DataFinal).Any();
+                if (dataAntesApos || dataAntesEntre || dataEntre || dataEntreApos)
                 {
                     return BadRequest(error: "Ja existe um curso no periodo informado ! ");
                 }
@@ -79,14 +85,20 @@ namespace Cursos.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                var resultado = _context.Curso.Where(x => x.Descricao.ToLower() == curso.Descricao.ToLower()).FirstOrDefault();
-                if (resultado != null)
+                var notActive = _context.Curso.Where(x => x.IsActive == true).ToListAsync();
+                bool notA = notActive.Result.Where(x => x.Descricao.ToLower() == curso.Descricao.ToLower()).Any();
+                if (notA)
                 {
-                    return BadRequest("Descrição é a mesma usada em Outro Curso !");
+                    return BadRequest(error: "Descrição é a mesma usada em Outro Curso !");
                 }
-                var resultadoDataEntre = _context.Curso.Where(x => x.DataInicio >= curso.DataInicio && x.DataFinal <= curso.DataFinal).FirstOrDefault();
-                var resultadoDataAnteseApos = _context.Curso.Where(x => x.DataInicio <= curso.DataInicio && x.DataFinal >= curso.DataFinal).FirstOrDefault();
-                if (resultadoDataEntre != null || resultadoDataAnteseApos != null)
+                bool dataAntesApos = notActive.Result.Where(x => curso.DataInicio <= x.DataInicio && curso.DataFinal >= x.DataFinal).Any();
+                bool dataAntesEntre = notActive.Result.Where(x => curso.DataInicio <= x.DataInicio && 
+                                                    (curso.DataFinal <= x.DataFinal && curso.DataFinal >= x.DataInicio)).Any();
+                bool dataEntre = notActive.Result.Where(x => (curso.DataInicio >= x.DataInicio && curso.DataInicio <= x.DataFinal) && 
+                                                    (curso.DataFinal <= x.DataFinal && curso.DataFinal >= x.DataInicio)).Any();
+                bool dataEntreApos = notActive.Result.Where(x => (curso.DataInicio >= x.DataInicio && curso.DataInicio <= x.DataFinal) && 
+                                                    curso.DataFinal > x.DataFinal).Any();
+                if (dataAntesApos || dataAntesEntre || dataEntre || dataEntreApos)
                 {
                     return BadRequest(error: "Ja existe um curso no periodo informado ! ");
                 }

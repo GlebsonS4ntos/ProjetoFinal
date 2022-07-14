@@ -28,4 +28,13 @@ export class CursosService {
     const a = `${this.url}/${id}`
     return this.http.put<number>(a,httpOptions);
   }
+
+  AtualizarCurso(curso: Curso): Observable<any> {
+    return this.http.put<Curso>(this.url, curso, httpOptions);
+  }
+
+  PegarPeloId(id: number): Observable<Curso>{
+    const apiUrl  = `${this.url}/${id}`;
+    return this.http.get<Curso>(apiUrl)
+  }
 }

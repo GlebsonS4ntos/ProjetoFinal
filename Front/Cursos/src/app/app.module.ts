@@ -25,8 +25,8 @@ import { ToastrModule } from 'ngx-toastr';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
     FormsModule,
+    BrowserAnimationsModule,
     ToastrModule.forRoot(
       {
         timeOut: 2500,

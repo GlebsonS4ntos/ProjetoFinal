@@ -10,6 +10,7 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Descricão</th>
+        <th scope="col">Alunos</th>
         <th scope="col">Data Inicio</th>
         <th scope="col">Data Termino</th>
         <th scope="col">Categoria</th>
@@ -19,15 +20,23 @@
       <tr *ngFor="let c of cursos, let i = index">
         <th scope="row">{{ i+1 }}</th>
         <td>{{ c.descricao }}</td>
+        <td>{{ c.quantidadeAlunos }}</td>
         <td>{{ c.dataInicio | date:'dd/MM/yyyy' }}</td>
         <td>{{ c.dataFinal | date:'dd/MM/yyyy' }}</td>
         <td>{{ c.categoria.categoriaName }}</td>
         <td>
-          <a type="button" class="btn btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil-square"></i></a>
+          <a type="button" class="btn btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="abrirModalAtualizacao(c.cursoId)"><i class="bi bi-pencil-square"></i></a>
           <a type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalDelete" (click)="alterarIdDeletar(c.cursoId)"><i class="bi bi-trash3"></i></a>
         </td>
       </tr>
     </tbody>
+    <tfoot *ngIf="cursos.length == 0">
+      <tr>
+        <td colspan="8">
+          <h4>Sem Registros</h4>
+        </td>
+      </tr>
+    </tfoot>
   </table>
 </div>
 
@@ -72,7 +81,7 @@
               <option *ngFor="let categoria of categorias" [value]="categoria.categoriaId"> {{ categoria.categoriaName }}</option>
             </select>
             <div class="invalid-feedback" id="validationServer04Feedback">
-              Example invalid select feedback
+              Campo Obrigatorio*
             </div>
           </div>
         </form>
