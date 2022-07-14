@@ -1,3 +1,4 @@
+import { validacoes } from './../../Models/Validacoes';
 import { Categoria } from './../../Models/Categoria';
 import { CategoriaService } from './../../Services/categoria/categoria.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -13,10 +14,31 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CursosComponent implements OnInit {
   cursos !: Curso[];
+  cursosFiltrados !: Curso[];
   tituloModal!: string;
   form: any ;
   categorias!: Categoria[];
   idDeletar!:number;
+  dataAtual = new Date();
+  private _buscar!: string;
+
+  get buscar():string{
+    return this._buscar;
+  }
+
+  set buscar(s: string){
+    this._buscar = s;
+    this.cursosFiltrados = this.buscar
+      ? this.filtrarCuros(this.buscar)
+      : this.cursos;
+  }
+
+  filtrarCuros(s:string):any{
+    return this.cursos.filter(
+      (curso: { descricao: string }) =>
+        curso.descricao.toLocaleLowerCase().indexOf(s.toLocaleLowerCase()) !== -1
+    );
+  }
 
   alterarIdDeletar(id:number){
     this.idDeletar = id;
@@ -26,8 +48,10 @@ export class CursosComponent implements OnInit {
 
   ngOnInit(): void {
     this.cursosService.PegarTodos().subscribe(
-      (resultado : any) =>
-        this.cursos = resultado
+      (resultado) => {
+        this.cursos = resultado,
+        this.cursosFiltrados = this.cursos
+      }
     );
     this.categoriaService.PegarTodos().subscribe( (resultado) =>
       this.categorias = resultado
@@ -83,7 +107,7 @@ export class CursosComponent implements OnInit {
       this.cursosService.AtualizarCurso(curso).subscribe((resultado) => {
         this.toastr.success('Atualizado com Sucesso!');
         this.cursosService.PegarTodos().subscribe((registros) => {
-          this.cursos = registros;
+          this.cursosFiltrados = registros;
         });
       },
       (error) => {
@@ -96,7 +120,7 @@ export class CursosComponent implements OnInit {
       this.cursosService.Salvar(curso).subscribe((resultado) => {
         this.toastr.success('Inserido com Sucesso!');
         this.cursosService.PegarTodos().subscribe((registros) => {
-        this.cursos = registros;
+        this.cursosFiltrados = registros;
         });
       },
       (error) => {
@@ -110,7 +134,7 @@ export class CursosComponent implements OnInit {
     this.cursosService.Delete(id).subscribe( resultado => {
       this.toastr.error("Registro Deletado");
       this.cursosService.PegarTodos().subscribe(resultado =>
-          this.cursos = resultado
+          this.cursosFiltrados = resultado
         );
     })
   }
