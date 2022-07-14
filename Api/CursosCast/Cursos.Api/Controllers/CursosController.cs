@@ -66,6 +66,10 @@ namespace Cursos.Api.Controllers
                 {
                     return BadRequest(error: "Ja existe um curso no periodo informado ! ");
                 }
+                if (curso.DataFinal.Date < curso.DataInicio.Date)
+                {
+                    return BadRequest(error: "Não é possivel Inserir um curso com a Data Final menor que a Inicial");
+                }
                 _context.Curso.Update(curso);
                 await _context.SaveChangesAsync();
                 var log =_context.Log.FirstOrDefault(x => x.CursoId == curso.CursoId);
@@ -101,6 +105,10 @@ namespace Cursos.Api.Controllers
                 if (dataAntesApos || dataAntesEntre || dataEntre || dataEntreApos)
                 {
                     return BadRequest(error: "Ja existe um curso no periodo informado ! ");
+                }
+                if (curso.DataFinal.Date < curso.DataInicio.Date)
+                {
+                    return BadRequest(error: "Não é possivel Inserir um curso com a Data Final menor que a Inicial");
                 }
                 _context.Curso.Add(curso);
                 await _context.SaveChangesAsync();

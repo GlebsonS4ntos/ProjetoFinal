@@ -52,6 +52,8 @@ export class CursosComponent implements OnInit {
   }
 
   filtrarCuros(s:string):any{
+    this._dataFinal = null;
+    this._dataInicio = null;
     return this.cursos.filter(
       (curso: { descricao: string }) =>
         curso.descricao.toLocaleLowerCase().indexOf(s.toLocaleLowerCase()) !== -1
@@ -109,7 +111,7 @@ export class CursosComponent implements OnInit {
       descricao: new FormControl(null, [Validators.required]),
       dataInicio: new FormControl(null, [Validators.required, validacoes.dataMenorQueAtual()]),
       dataFinal: new FormControl(null, [Validators.required]),
-      quantidadeAlunos: new FormControl(null),
+      quantidadeAlunos: new FormControl(0),
       categoriaId: new FormControl(0, [Validators.required]),
       isActive: new FormControl(true),
       categoria: new FormControl(null)
@@ -138,15 +140,14 @@ export class CursosComponent implements OnInit {
       curso.quantidadeAlunos = 0;
     }
     if(curso.cursoId > 0){ //atualização
-      this.cursosService.AtualizarCurso(curso).subscribe((resultado) => {
+      this.cursosService.AtualizarCurso(curso).subscribe( (resultado) =>{
         this.toastr.success('Atualizado com Sucesso!');
         this.cursosService.PegarTodos().subscribe((registros) => {
           this.cursosFiltrados = registros;
         });
       },
       (error) => {
-        this.toastr.error("Error ao Atualizar o Curso! Verifique o Periodo Informado ou a Descrição");
-        console.log(error);
+        this.toastr.error(error.error);
       }
       );
     }
@@ -158,23 +159,23 @@ export class CursosComponent implements OnInit {
         });
       },
       (error) => {
-        this.toastr.error("Error ao Inserir o Curso! Verifique o Periodo Informado ou a Descrição");
+        this.toastr.error(error.error);
       }
       );
     }
   }
 
   ExcluirCurso(id:number):void{
-    this.cursosService.Delete(id).subscribe( resultado => {
-      this.toastr.error("Registro Deletado");
-      this.cursosService.PegarTodos().subscribe(resultado => {
-        this.cursosFiltrados = resultado
+    this.cursosService.Delete(id).subscribe(  (resultado) => {
+      this.toastr.error('Deletado com Sucesso!');
+        this.cursosService.PegarTodos().subscribe((registros) => {
+        this.cursosFiltrados = registros;
+        });
       },
       (error) => {
-        this.toastr.error("Não é possivel Deletar um curso com ja completado");
+        this.toastr.error(error.error);
       }
-        );
-    })
+      );
   }
 
   formatarData(n: any): Date{
